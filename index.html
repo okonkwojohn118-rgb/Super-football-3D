@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071b16">
+<title>SUPER FOOTBALL 3D</title>
+<style>
+:root{--bg:#071b16;--panel:#102820;--green:#28d17c;--lime:#b5ff61;--muted:#a8c4b8;--white:#f4fff8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#174a35 0,#071b16 52%);color:var(--white);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 5%;border-bottom:1px solid #ffffff18;background:#061710b8;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.logo{font-weight:900;letter-spacing:1px;font-size:19px}.logo span{color:var(--lime)}.wallet{background:#203c2e;border:1px solid #5a895d;padding:9px 13px;border-radius:30px;font-weight:bold;color:var(--lime)}
+main{max-width:1100px;margin:auto;padding:28px 16px 50px}.hero{text-align:center;padding:28px 10px 22px}.eyebrow{color:var(--lime);font-size:12px;letter-spacing:3px;font-weight:bold}.hero h1{font-size:clamp(32px,7vw,58px);line-height:1;margin:12px 0}.hero p{color:var(--muted);max-width:560px;margin:0 auto 22px;line-height:1.5}
+button,select{font:inherit}button{border:0;border-radius:12px;padding:13px 18px;background:var(--green);color:#062016;font-weight:800;cursor:pointer;transition:.15s}button:hover{transform:translateY(-1px);filter:brightness(1.08)}button.secondary{background:#234438;color:var(--white);border:1px solid #416a55}button:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}.card{background:linear-gradient(145deg,#15372a,#0d241c);border:1px solid #ffffff18;border-radius:18px;padding:20px;min-height:145px}.card .emoji{font-size:28px}.card h3{margin:12px 0 6px}.card p{color:var(--muted);font-size:13px;line-height:1.45;margin:0}
+.section{background:#0d241c;border:1px solid #ffffff18;border-radius:18px;padding:20px;margin-top:18px}.section h2{margin:0 0 14px;font-size:20px}.club-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.club{background:#17372b;border:1px solid #ffffff1c;border-radius:13px;padding:13px 8px;text-align:center;cursor:pointer}.club.active{border:2px solid var(--lime);background:#254b35}.club b{display:block;font-size:13px;margin-top:7px}.crest{font-size:27px}
+.actions{display:flex;flex-wrap:wrap;gap:10px}.hidden{display:none!important}.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}
+#gameWrap{height:390px;position:relative;border-radius:16px;overflow:hidden;background:#153d29;border:1px solid #4b805e}#gameCanvas{width:100%;height:100%;display:block}.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none;font-weight:bold;text-shadow:0 2px 5px #000}.controls{display:flex;justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap}.controls button{min-width:65px}.score{background:#061710cc;padding:8px 12px;border-radius:10px}.small{font-size:12px;color:var(--muted)}
+footer{text-align:center;color:#729487;font-size:12px;padding:20px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.club-grid{grid-template-columns:repeat(2,1fr)}#gameWrap{height:300px}header{padding:13px 4%}.logo{font-size:16px}}
+</style>
+</head>
+<body>
+<header><div class="logo">SUPER <span>FOOTBALL</span> 3D</div><div class="wallet">🪙 <span id="coins">0</span> COINS</div></header>
+<main>
+<section id="home">
+ <div class="hero"><div class="eyebrow">YOUR CLUB. YOUR STORY.</div><h1>SUPER FOOTBALL <span style="color:var(--lime)">3D</span></h1><p>Choose your club, enter the pitch and start your football journey.</p><button onclick="show('clubs')">START PLAYING</button></div>
+ <div class="grid">
+  <div class="card"><div class="emoji">🏆</div><h3>Career Mode</h3><p>Choose an existing club and build your football journey.</p></div>
+  <div class="card"><div class="emoji">⚽</div><h3>Offline Match</h3><p>Play a quick match and collect coins.</p></div>
+  <div class="card"><div class="emoji">🪙</div><h3>Coin Rewards</h3><p>Earn coins after matches. Winning gives you an extra reward.</p></div>
+ </div>
+ <div class="section"><h2>Game features</h2><p class="small">Club selection • Career mode • Offline matches • Coin rewards • 3D pitch prototype</p></div>
+</section>
+<section id="clubs" class="hidden">
+ <div class="section"><h2>Choose your club</h2><p class="small">Select a team to represent.</p><div class="club-grid" id="clubGrid"></div><p class="note" id="selectedClub">No club selected yet.</p><div class="actions"><button onclick="show('home')" class="secondary">BACK</button><button onclick="show('modes')" id="continueBtn" disabled>CONTINUE</button></div></div>
+</section>
+<section id="modes" class="hidden">
+ <div class="section"><h2 id="clubTitle">Your club</h2><p class="small">Choose a game mode.</p><div class="grid">
+  <div class="card"><div class="emoji">🏆</div><h3>Career Match</h3><p>Win career matches to earn 30–50 coins. A loss earns 5–9 coins.</p><button onclick="startMatch('career')">PLAY CAREER</button></div>
+  <div class="card"><div class="emoji">⚽</div><h3>Offline Match</h3><p>Earn 5–9 coins after an offline match, plus a winning bonus.</p><button onclick="startMatch('offline')">PLAY OFFLINE</button></div>
+ </div><button class="secondary" onclick="show('clubs')">CHANGE CLUB</button></div>
+</section>
+<section id="match" class="hidden">
+ <div class="section"><h2 id="matchTitle">Match</h2><div id="gameWrap"><canvas id="gameCanvas"></canvas><div class="hud"><div class="score" id="score">YOU 0 - 0 CPU</div><div class="score" id="clock">00:00</div></div></div>
+ <div class="controls"><button class="secondary" id="left">◀</button><button class="secondary" id="up">▲</button><button class="secondary" id="down">▼</button><button class="secondary" id="right">▶</button><button id="kick">KICK</button></div>
+ <p class="note">Use the arrow buttons or keyboard arrows to move. Press KICK or Space near the ball. This is an early playable prototype; match rules and full teams will be added in later versions.</p>
+ <div class="actions"><button onclick="finishMatch(true)">FINISH — WIN</button><button class="secondary" onclick="finishMatch(false)">FINISH — LOSS</button><button class="secondary" onclick="show('modes')">EXIT MATCH</button></div>
+ <p class="small" id="matchMessage"></p></div>
+</section>
+<section id="result" class="hidden"><div class="section" style="text-align:center"><div style="font-size:42px">🏁</div><h2 id="resultTitle">Match complete</h2><p id="resultText"></p><h2 style="color:var(--lime)" id="rewardText"></h2><button onclick="show('modes')">PLAY AGAIN</button> <button class="secondary" onclick="show('home')">HOME</button></div></section>
+</main>
+<footer>SUPER FOOTBALL 3D • Early website prototype</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const clubs=[['🔴','Arsenal'],['🔵','Chelsea'],['🔴','Liverpool'],['🔵','Manchester City'],['⚪','Real Madrid'],['🔵','Barcelona'],['⚫','Juventus'],['🔴','Bayern Munich']];
+let selected=null,coins=0,mode='offline',scene,camera,renderer,player,ball,opponent,keys={},clockSeconds=0,clockTimer=null,finished=false;
+function show(id){document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id==='match')setTimeout(init3D,80)}
+document.getElementById('clubGrid').innerHTML=clubs.map((c,i)=>`<div class="club" onclick="chooseClub(${i})"><div class="crest">${c[0]}</div><b>${c[1]}</b></div>`).join('');
+function chooseClub(i){selected=clubs[i][1];document.querySelectorAll('.club').forEach((e,j)=>e.classList.toggle('active',i===j));document.getElementById('selectedClub').textContent='Selected club: '+selected;document.getElementById('continueBtn').disabled=false}
+function startMatch(m){mode=m;finished=false;clockSeconds=0;document.getElementById('matchTitle').textContent=(m==='career'?'CAREER MATCH':'OFFLINE MATCH')+' — '+selected;document.getElementById('score').textContent='YOU 0 - 0 CPU';document.getElementById('matchMessage').textContent='Move your player and try to reach the ball!';show('match');if(clockTimer)clearInterval(clockTimer);clockTimer=setInterval(()=>{clockSeconds++;document.getElementById('clock').textContent=String(Math.floor(clockSeconds/60)).padStart(2,'0')+':'+String(clockSeconds%60).padStart(2,'0')},1000)}
+function finishMatch(win){if(finished)return;finished=true;clearInterval(clockTimer);let reward=mode==='career'?(win?rand(30,50):rand(5,9)):rand(5,9)+(win?3:0);coins+=reward;document.getElementById('coins').textContent=coins;document.getElementById('resultTitle').textContent=win?'YOU WON!':'MATCH FINISHED';document.getElementById('resultText').textContent=selected+' • '+(win?'Victory':'Keep practicing');document.getElementById('rewardText').textContent='+'+reward+' COINS';show('result')}
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function init3D(){
+ const canvas=document.getElementById('gameCanvas');if(!window.THREE){canvas.parentElement.innerHTML='<div style="padding:40px;text-align:center">3D preview needs an internet connection and a browser that supports WebGL.</div>';return}
+ if(renderer){renderer.dispose();renderer=null}
+ scene=new THREE.Scene();scene.background=new THREE.Color(0x6eb6d1);scene.fog=new THREE.Fog(0x6eb6d1,35,80);
+ camera=new THREE.PerspectiveCamera(55,canvas.clientWidth/canvas.clientHeight,.1,100);camera.position.set(0,15,22);camera.lookAt(0,0,0);
+ renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x315b37,2));let sun=new THREE.DirectionalLight(0xffffff,1.5);sun.position.set(-5,15,8);scene.add(sun);
+ let grass=new THREE.Mesh(new THREE.PlaneGeometry(18,30),new THREE.MeshStandardMaterial({color:0x278447}));grass.rotation.x=-Math.PI/2;scene.add(grass);
+ for(let z=-12;z<15;z+=4){let stripe=new THREE.Mesh(new THREE.PlaneGeometry(18,2),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.045}));stripe.rotation.x=-Math.PI/2;stripe.position.set(0,.012,z);scene.add(stripe)}
+ const lineMat=new THREE.MeshBasicMaterial({color:0xffffff});
+ function line(x,z,w,h){let o=new THREE.Mesh(new THREE.BoxGeometry(w,.025,h),lineMat);o.position.set(x,.03,z);scene.add(o)}
+ line(0,-14,18,.12);line(0,14,18,.12);line(-9,0,.12,28);line(9,0,.12,28);line(0,0,18,.1);
+ let circle=new THREE.Mesh(new THREE.RingGeometry(2.7,2.82,64),lineMat);circle.rotation.x=-Math.PI/2;circle.position.y=.04;scene.add(circle);
+ line(0,-11,8,.1);line(-4,-12.5,.1,3);line(4,-12.5,.1,3);line(0,11,8,.1);line(-4,12.5,.1,3);line(4,12.5,.1,3);
+ function person(color,x,z){let g=new THREE.Group();let body=new THREE.Mesh(new THREE.CylinderGeometry(.32,.38,1.1,12),new THREE.MeshStandardMaterial({color}));body.position.y=.85;g.add(body);let head=new THREE.Mesh(new THREE.SphereGeometry(.25,12,12),new THREE.MeshStandardMaterial({color:0xf0c6a0}));head.position.y=1.55;g.add(head);g.position.set(x,0,z);scene.add(g);return g}
+ player=person(0x24d17c,0,7);opponent=person(0xff5555,0,-7);
+ ball=new THREE.Mesh(new THREE.SphereGeometry(.28,18,18),new THREE.MeshStandardMaterial({color:0xffffff}));ball.position.set(1,.28,5);scene.add(ball);
+ const goalMat=new THREE.MeshStandardMaterial({color:0xe9f4ed,wireframe:true});let goal=new THREE.Mesh(new THREE.BoxGeometry(5,2.5,.5),goalMat);goal.position.set(0,1.25,-14);scene.add(goal);
+ function animate(){if(!renderer)return;requestAnimationFrame(animate);let speed=.12;if(keys.ArrowLeft||keys.a)player.position.x-=speed;if(keys.ArrowRight||keys.d)player.position.x+=speed;if(keys.ArrowUp||keys.w)player.position.z-=speed;if(keys.ArrowDown||keys.s)player.position.z+=speed;player.position.x=Math.max(-8,Math.min(8,player.position.x));player.position.z=Math.max(-13,Math.min(13,player.position.z));if(ball.position.distanceTo(new THREE.Vector3(player.position.x,.28,player.position.z))<1.2){ball.position.x+=(player.position.x-ball.position.x)*.035;ball.position.z+=(player.position.z-ball.position.z)*.035}opponent.position.x=Math.sin(Date.now()/900)*3;opponent.position.z=-7+Math.sin(Date.now()/1500);camera.position.x=player.position.x*.22;camera.lookAt(player.position.x*.15,0,0);renderer.render(scene,camera)}
+ animate();
+}
+function kick(){if(!ball||!player)return;let dx=ball.position.x-player.position.x,dz=ball.position.z-player.position.z;if(Math.hypot(dx,dz)<2.2){ball.position.z-=3.2;ball.position.x+=dx*.5;document.getElementById('matchMessage').textContent='Nice kick! Keep moving toward the goal.'}else{document.getElementById('matchMessage').textContent='Move closer to the ball before kicking.'}}
+document.addEventListener('keydown',e=>{keys[e.key]=true;if(e.code==='Space'){e.preventDefault();kick()}});document.addEventListener('keyup',e=>keys[e.key]=false);
+[['left','ArrowLeft'],['right','ArrowRight'],['up','ArrowUp'],['down','ArrowDown']].forEach(([id,key])=>{let b=document.getElementById(id);b.addEventListener('pointerdown',e=>{e.preventDefault();keys[key]=true});['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>keys[key]=false))});
+document.getElementById('kick').addEventListener('click',kick);
+window.addEventListener('resize',()=>{if(renderer&&camera){let c=document.getElementById('gameCanvas');camera.aspect=c.clientWidth/c.clientHeight;camera.updateProjectionMatrix();renderer.setSize(c.clientWidth,c.clientHeight,false)}});
+</script>
+</body>
+</html>
